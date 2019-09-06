@@ -1,4 +1,4 @@
-from ChessBoardParse import ChessBoardParse
+from src.ChessBoardParse import ChessBoardParse
 from flask import *
 from werkzeug.utils import secure_filename
 import time

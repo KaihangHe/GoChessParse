@@ -4,8 +4,8 @@ import cv2
 import numpy as np
 import cv2
 import math
-from Remapper import *
-from SSDNet import SSDNet
+from src.Remapper import *
+from src.SSDNet import SSDNet
 import random
 
 
@@ -55,20 +55,20 @@ class ChessBoardParse:
         delta_ways = []
         edgeImage = cv2.dilate(edgeImage, cv2.getStructuringElement(0, (12, 12)))
         _, edgeImage = cv2.threshold(edgeImage, 125, 255, cv2.THRESH_BINARY_INV)
-        _,contours, hier = cv2.findContours(edgeImage, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hier = cv2.findContours(edgeImage, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
         con_inf = []
         for con in contours:
             x, y, w, h = cv2.boundingRect(con)
             con_center = (x + w // 2, y + h // 2)
             area = abs(cv2.contourArea(con))
             con_inf.append((con_center, area))
-        # cv2.imshow('edgeImage', edgeImage)
         for way in perhaps_ways:
             delta_ways.append(abs(way - temp_way_num))
         way_num = perhaps_ways[delta_ways.index(min(delta_ways))]
         x_pairs, y_pairs = [], []
         parser_image = np.zeros([600, 600, 3], np.uint8)
-        parser_image[:, :, 2] = edgeImage.copy()
+        parser_image[:, :, 0] = edgeImage.copy()*0.85
+        cv2.waitKey()
         for pos_index in range(len(chess_board_pos[0]) - way_num + 1):
             pos_list = chess_board_pos[0][pos_index:pos_index + way_num]
             y_pairs.append([pos_list[0], pos_list[-1]])
@@ -89,12 +89,11 @@ class ChessBoardParse:
                 center = inf[0]
                 if center[0] > pt1[0] and center[0] < pt2[0] and center[1] > pt1[1] and center[1] < pt2[1]:
                     con_num += 1
-                    # cv2.circle(parser_image, center, 3, (0, 255, 0), -1)
-            # cv2.rectangle(parser_image, pt1, pt2, (0, 255, 0), 1)
+                    cv2.circle(parser_image, center, 3, (0, 255, 0), -1)
+            cv2.rectangle(parser_image, pt1, pt2, (0, 255, 0), 1)
             # cv2.imshow('rac', parser_image)
-            # cv2.waitKey()
             parser_image = np.zeros([600, 600, 3], np.uint8)
-            parser_image[:, :, 2] = edgeImage.copy()
+            parser_image[:, :, 0] = edgeImage.copy()
             print(con_num)
             roi_contour_anyis.append(con_num)
         if len(roi_contour_anyis) <= 0:
@@ -140,7 +139,7 @@ class ChessBoardParse:
         maskImage = cv2.warpPerspective(maskImage, prespect_mat, output_Imageshape)
         output_center_list = []
         # cv2.imshow('maskImage', maskImage)
-        _,contours, hier = cv2.findContours(maskImage, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hier = cv2.findContours(maskImage, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for con in contours:
             x, y, w, h = cv2.boundingRect(con)
             pixel = maskImage[y + h // 2, x + w // 2]
@@ -182,7 +181,7 @@ class ChessBoardParse:
         hist_image = [x_hist, y_hist]
         chess_board_pos = []
         for image_index, hist in enumerate(hist_image):
-            _,contours, hier = cv2.findContours(hist, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv2.findContours(hist, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             line_pos = []
             index = image_index
             hist_val = 1 - image_index
@@ -199,8 +198,9 @@ class ChessBoardParse:
             cv2.line(x_hist, (0, l), (1000, l), (255, 0, 0), 1)
         for l in chess_board_pos[1]:
             cv2.line(y_hist, (l, 0), (l, 1000), (255, 0, 0), 1)
-        # cv2.imshow("yhist", y_hist)
-        # cv2.imshow("x_hist", x_hist)
+        cv2.imshow("yhist", y_hist)
+        cv2.imshow("x_hist", x_hist)
+
         chess_board_pos[0].reverse()
         chess_board_pos[1].reverse()
         return chess_board_pos
@@ -208,7 +208,7 @@ class ChessBoardParse:
     def __position(self, chess_board_pos, center_list):
         parser_image = np.zeros([600, 600, 3], np.uint8)
         radius = abs(chess_board_pos[0][0] - chess_board_pos[0][-1]) // len(chess_board_pos[0])
-        print("raduis",radius)
+        print("raduis", radius)
         radius *= 0.7
         output_mat = np.zeros([len(chess_board_pos[0]), len(chess_board_pos[1])], np.int)
         chess_position = []
@@ -236,7 +236,7 @@ class ChessBoardParse:
 
     def output_matrix(self, srcImage):
         srcImage = cv2.imread(srcImage)
-        srcImage = cv2.resize(srcImage, (700, 700))
+        # srcImage = cv2.resize(srcImage, (700, 700))
         center_list = self.__detect(srcImage)
         maskImage = np.zeros((srcImage.shape[0], srcImage.shape[1]), np.uint8)
         for center in center_list:
