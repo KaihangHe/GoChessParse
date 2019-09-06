@@ -1,4 +1,4 @@
-Fri, 06 Sep 2019 21:39:48 WARNING From /home/nicapoet/Templates/gochessparse/src/SSDNet.py:26: The name tf.Session is deprecated. Please use tf.compat.v1.Session instead.
+Fri, 06 Sep 2019 22:40:14 WARNING From /home/nicapoet/Templates/gochessparse/src/SSDNet.py:26: The name tf.Session is deprecated. Please use tf.compat.v1.Session instead.
 
-Fri, 06 Sep 2019 21:39:48 WARNING From /home/nicapoet/Templates/gochessparse/src/SSDNet.py:27: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+Fri, 06 Sep 2019 22:40:14 WARNING From /home/nicapoet/Templates/gochessparse/src/SSDNet.py:27: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
 
