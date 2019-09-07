@@ -111,7 +111,7 @@ def main(_):
                              job_name=task_info.type,
                              task_index=task_info.index)
     if task_info.type == 'ps':
-      server.join()d
+      server.join()
       return
 
     worker_job_name = '%s/task:%d' % (task_info.type, task_info.index)

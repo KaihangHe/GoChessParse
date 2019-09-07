@@ -4,6 +4,10 @@ from .forms import ImageForm
 
 @upload_blueprint.route('/',methods=['GET','POST'])
 def upload():
+    '''
+
+    :return:
+    '''
     form=ImageForm()
     if form.validate_on_submit():
         image=form.image.data

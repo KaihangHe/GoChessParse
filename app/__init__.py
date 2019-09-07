@@ -4,6 +4,10 @@ from flask_bootstrap import Bootstrap
 
 
 def create_app():
+    '''
+
+    :return:
+    '''
     app = Flask(__name__)
     bootstrap = Bootstrap()
     bootstrap.init_app(app)
