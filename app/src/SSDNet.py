@@ -3,7 +3,7 @@
 import cv2
 import tensorflow as tf
 import numpy as np
-from utils import label_map_util
+from  object_detection.utils import label_map_util
 
 
 class SSDNet:

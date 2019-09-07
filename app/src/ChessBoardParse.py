@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 # code by nicapoet
-import cv2
 import numpy as np
 import cv2
 import math

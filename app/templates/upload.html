@@ -1,7 +1,11 @@
-<!DOCTYPE html>
-<title>Upload new File</title>
-<h1>Upload new File</h1>
-<form method=post action='#' enctype=multipart/form-data>
-  <input type=file name=file>
-  <input type=submit value=Upload>
- </form>
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+<title>GoChessParse</title>
+{% block content %}
+<div class="container">
+    <h1>Welcome</h1>
+    <p>Please upload a gochess photo:</p>
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}
+
