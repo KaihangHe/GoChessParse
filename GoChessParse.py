@@ -2,7 +2,6 @@ import os
 import click
 import unittest
 from app import create_app
-from app.cv_parse.ChessBoardParser import ChessBoardParser
 
 
 @click.group()
@@ -24,7 +23,6 @@ def run():
     '''
     run flask web server
     '''
-    print("flasky")
     app = create_app()
     app.run()
 
@@ -36,6 +34,7 @@ def input_image(image_path):
     output result with web server
     '''
     import cv2
+    from app.cv_parse.ChessBoardParser import ChessBoardParser
     image = cv2.imread(image_path)
     parser = ChessBoardParser()
     output_matrix = parser.output(image)
