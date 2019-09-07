@@ -4,6 +4,7 @@ import unittest
 from app import create_app
 from app.cv_parse.ChessBoardParser import ChessBoardParser
 
+
 @click.group()
 def cli():
     pass
@@ -34,8 +35,12 @@ def input_image(image_path):
     '''
     output result with web server
     '''
-    output_matrix=ChessBoardParser.output(image_path)
+    import cv2
+    image = cv2.imread(image_path)
+    parser = ChessBoardParser()
+    output_matrix = parser.output(image)
     print(output_matrix)
+
 
 cli.add_command(test)
 cli.add_command(run)

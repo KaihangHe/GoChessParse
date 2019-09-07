@@ -7,7 +7,11 @@ class ChessBoardParser:
         pass
 
     def output(self,image):
-        output_matrix=np.array([0])
+        cv2.cvtColor(image,cv2.COLOR_BGR2RGB,image)
+        center_lists=ssd_net.detect_chesspieces(image)
+        for pt in center_lists:
+            print(pt)
+        output_matrix=[]
         return output_matrix
 
     def detect_chesspieces(self,image):

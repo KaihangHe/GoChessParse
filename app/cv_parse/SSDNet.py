@@ -59,18 +59,17 @@ class SSDNet:
 
     def __forward__(self, image):
         '''
-
         :param image:
         :return:
         '''
         return self.__sess__.run(self.tensor_dict, feed_dict={self.image_tensor: image})
-    def detect_chesspieces(self, InputArray):
-        '''
 
+    def __split_image__(self, InputArray):
+        '''
         :param InputArray:
         :return:
         '''
-        center_list, roi_list = [], []
+        roi_list = []
         srcImage = InputArray.copy()
         width, height = srcImage.shape[1], srcImage.shape[0]
         roi_width, roi_height = int(width * 0.6), int(height * 0.6)
@@ -81,21 +80,25 @@ class SSDNet:
                 ROI = srcImage[roi_tly:roi_tly + roi_height, roi_tlx:roi_tlx + roi_width]
                 roi_list.append(ROI)
         roi_input = np.array([roi_list[0], roi_list[1], roi_list[2], roi_list[3]])
-        output = self.__forward__(roi_input)
+        return roi_input
+
+    def __concat_image_output__(self, output_dict, image_shape, split_ROI_shape):
+        center_list = []
         index = 0
         aver = 0
+        width, height = image_shape[1], image_shape[0]
         for y in range(2):
             for x in range(2):
                 roi_tlx, roi_tly = int(width * 0.4) * x, int(height * 0.4) * y
                 divide_x, divide_y = width // 2, height // 2
                 output_roi = {}
-                output_roi['num_detections'] = int(output['num_detections'][index])
-                output_roi['detection_classes'] = output[
+                output_roi['num_detections'] = int(output_dict['num_detections'][index])
+                output_roi['detection_classes'] = output_dict[
                     'detection_classes'][index].astype(np.uint8)
-                output_roi['detection_boxes'] = output['detection_boxes'][index]
-                output_roi['detection_scores'] = output['detection_scores'][index]
+                output_roi['detection_boxes'] = output_dict['detection_boxes'][index]
+                output_roi['detection_scores'] = output_dict['detection_scores'][index]
                 index += 1
-                center_temp = self.__get_chess_pieces_position__(ROI.shape, output_roi, 0.1)
+                center_temp = self.__get_chess_pieces_position__(split_ROI_shape, output_roi, 0.1)
                 for p in center_temp:
                     p = (int(p[0] + roi_tlx), int(p[1] + roi_tly), int(p[2]), (p[3][0] + roi_tlx, p[3][1] + roi_tly),
                          (p[4][0] + roi_tlx, p[4][1] + roi_tly))
@@ -115,8 +118,19 @@ class SSDNet:
             size_val = (abs(temp[3][0] - temp[4][0]) + abs(temp[3][1] - temp[4][1])) // 2
             if size_val < aver * 0.7:
                 center_list.pop(index)
-            # print('size_val=', size_val)
-        #self.draw_pts(InputArray.copy(), center_list)
+        return center_list
+
+    def detect_chesspieces(self, InputArray):
+        '''
+        :param InputArray:
+        :return:
+        '''
+        center_list = []
+        roi_input = self.__split_image__(InputArray)
+        output = self.__forward__(roi_input)
+        center_list = self.__concat_image_output__(output, InputArray.shape, roi_input[0].shape)
+        # print('size_val=', size_val)
+        # self.draw_pts(InputArray.copy(), center_list)
         return center_list
 
     def __get_chess_pieces_position__(self, InputImage_shape, forward_result, beshowed_threshold=0.1):
