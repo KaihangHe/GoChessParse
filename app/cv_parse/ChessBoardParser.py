@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-from . import ssd_net
-
 
 class ChessBoardParser:
     def __init__(self):
@@ -12,9 +10,10 @@ class ChessBoardParser:
         edgeImage = self.__rebuildChessboard__(srcImage, center_list)
         edge_lines = self.__houghEdge__(edgeImage, srcImage)
         corners_list = []
+        self.__get__pieces_mask(maskImage,center_list)
         for index in range(len(edge_lines)):
             corners_list.append(self.__clac_intersection(edge_lines[index], edge_lines[(index + 1) % 4]))
-        dstImage, center_list = self.__remapLocate__(edgeImage, corners_list, maskImage)
+        dstImage, center_list = self.__remapLocate__(edgeImage, corners_list, maskImage, srcImage.shape[0:2])
         chess_board_pos = self.__shadowHist__(dstImage)
         chess_board_pos = self.__validate_edge_line__(chess_board_pos, dstImage, center_list)
         output_matrix = self.__position__(chess_board_pos, center_list)
@@ -23,16 +22,21 @@ class ChessBoardParser:
 
     @staticmethod
     def draw_chesspieces_locate(image, center_lists):
+        show_image=image.copy()
         for center_info in center_lists:
             color = (0, 255, 0)
             if center_info[2] == 1:
                 color = (255, 0, 0)
-            cv2.rectangle(image, center_info[3], center_info[4], color, 2)
-        cv2.imshow('image', image)
-        cv2.waitKey()
+            cv2.rectangle(show_image, center_info[3], center_info[4], color, 2)
+        return show_image
 
-    def detect_chesspieces(self, image):
-        ssd_net.__forward__(image)
+
+    def __get__pieces_mask(self,maskImage,center_list):
+        for center in center_list:
+            color = 70
+            if center[2] == 2:
+                color = 255
+            cv2.circle(maskImage, (center[0], center[1]), 8, color, -1)
 
     def __clac_intersection(self, line_a, line_b):
         x1_a, y1_a, x2_a, y2_a = line_a
@@ -111,6 +115,7 @@ class ChessBoardParser:
                     cv2.circle(parser_image, center, 3, (0, 255, 0), -1)
             cv2.rectangle(parser_image, pt1, pt2, (0, 255, 0), 1)
             # cv2.imshow('rac', parser_image)
+            # cv2.waitKey()
             parser_image = np.zeros([600, 600, 3], np.uint8)
             parser_image[:, :, 0] = edgeImage.copy()
             print(con_num)
@@ -127,7 +132,7 @@ class ChessBoardParser:
         chess_board_pos[1] = list(filter(lambda pos: True if pos <= output_roi[1][0] else False, chess_board_pos[1]))
         chess_board_pos[0] = list(filter(lambda pos: True if pos >= output_roi[0][1] else False, chess_board_pos[0]))
         chess_board_pos[0] = list(filter(lambda pos: True if pos <= output_roi[1][1] else False, chess_board_pos[0]))
-        print(chess_board_pos)
+        # print(chess_board_pos)
         return chess_board_pos
 
     def __houghEdge__(self, edgeImage, srcImage=None):
@@ -254,6 +259,7 @@ class ChessBoardParser:
             color = center[1]
             center = (center[0])
             cv2.circle(parser_image, center, 5, (255 * (color - 1), 255, 0), -1)
+
         for index_y, chess_line in enumerate(chess_position):
             for index_x, pos in enumerate(chess_line):
                 cv2.circle(parser_image, pos, 2, (255, 255, 255), -1)
@@ -266,4 +272,6 @@ class ChessBoardParser:
                     center = center[0]
                     if center[0] > x1 and center[0] < x2 and center[1] > y1 and center[1] < y2:
                         output_mat[index_y, index_x] = color
+        # cv2.imshow('par',parser_image)
+        # cv2.waitKey()
         return output_mat
