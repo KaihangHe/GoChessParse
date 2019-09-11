@@ -39,7 +39,7 @@ python GoChessParse.py
 - 输入图
 
 
-		![](static/srcImage.jpg)
+![](static/srcImage.jpg)
 	
 	
 - output matrix
@@ -67,4 +67,4 @@ python GoChessParse.py
 - process
 
 
-		[![nwg3pd.gif](https://s2.ax1x.com/2019/09/11/nwg3pd.gif)](https://imgchr.com/i/nwg3pd)
+[![nwg3pd.gif](https://s2.ax1x.com/2019/09/11/nwg3pd.gif)](https://imgchr.com/i/nwg3pd)
