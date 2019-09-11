@@ -2,8 +2,12 @@ version: "3"
 services:
   gochessparser_server:
     build:
-      static/
+      .
+    ports:
+      - 80:5000
     image: gochessparser
     container_name: gochessparser_server
     restart: always
+    volumes:
+      - /var/upload:/root/GoChessParse/upload
 

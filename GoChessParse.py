@@ -1,6 +1,5 @@
 import os
 import click
-
 import unittest
 from app import create_app
 from app.cv_parse import output_result
@@ -26,7 +25,7 @@ def run():
     run flask web server
     '''
     app = create_app()
-    app.run(host='127.0.0.1', port=2048, debug=False)
+    app.run(host='0.0.0.0',debug=False)
 
 
 @click.command()

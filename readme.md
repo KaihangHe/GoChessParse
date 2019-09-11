@@ -1,6 +1,11 @@
 # GoChessParse
 
+### 快速运行：
 
+```shell
+cd GoChessParse
+docker-compose up
+```
 
 ### 输入图片：
 
