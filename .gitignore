@@ -2,4 +2,4 @@
 venv/
 __pycache__/
 app/src/
-upload/
+upload/*
