@@ -1,0 +1,9 @@
+version: "3"
+services:
+  gochessparser_server:
+    build:
+      static/
+    image: gochessparser
+    container_name: gochessparser_server
+    restart: always
+
