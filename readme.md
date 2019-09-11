@@ -64,7 +64,7 @@ python GoChessParse.py
    [0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0]  
    [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]]  
 
-- process
+- 处理过程
 
 
 [![nwg3pd.gif](https://s2.ax1x.com/2019/09/11/nwg3pd.gif)](https://imgchr.com/i/nwg3pd)
