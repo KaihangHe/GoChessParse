@@ -17,5 +17,5 @@ def output_result(image_Path,show_result):
         show_image = ChessBoardParser.draw_chesspieces_locate(image=image, center_lists=center_lists)
         cv2.imshow('show_image', show_image)
         cv2.waitKey()
-    output_matrix = json.dumps(parser.output(image, center_lists).tolist())
+    output_matrix = parser.output(image, center_lists)
     return output_matrix
