@@ -34,7 +34,7 @@ def input_image(image_path):
     '''
     output result with web server
     '''
-    print(output_result(image_path, False))
+    print(output_result("/home/nicapoet/Pictures/7.jpg", False))
 
 
 cli.add_command(test)

@@ -112,8 +112,9 @@ class SSDNet:
                         continue
                     center_list.append(p)
                     aver += (abs(p[3][0] - p[4][0]) + abs(p[3][1] - p[4][1])) // 2
+        if  len(center_list)==0:
+            raise ZeroDivisionError
         aver /= len(center_list)
-        # print('aver=', aver)
         for index, temp in enumerate(center_list):
             size_val = (abs(temp[3][0] - temp[4][0]) + abs(temp[3][1] - temp[4][1])) // 2
             if size_val < aver * 0.7:
