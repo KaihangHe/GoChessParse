@@ -1,7 +1,10 @@
 import os
+import cv2
 import click
 import unittest
 from app import create_app
+from app.cv_parse import ssd_net
+from app.cv_parse.ChessBoardParser import ChessBoardParser
 
 
 @click.group()
@@ -24,7 +27,7 @@ def run():
     run flask web server
     '''
     app = create_app()
-    app.run()
+    app.run(host='127.0.0.1', port=2048)
 
 
 @click.command()
@@ -33,11 +36,12 @@ def input_image(image_path):
     '''
     output result with web server
     '''
-    import cv2
-    from app.cv_parse.ChessBoardParser import ChessBoardParser
-    image = cv2.imread(image_path)
+
     parser = ChessBoardParser()
-    output_matrix = parser.output(image)
+    image = cv2.imread(image_path)
+    center_lists = ssd_net.detect_chesspieces(InputArray=image)
+    ChessBoardParser.draw_chesspieces_locate(image=image, center_lists=center_lists)
+    output_matrix = parser.output(image,center_lists)
     print(output_matrix)
 
 
