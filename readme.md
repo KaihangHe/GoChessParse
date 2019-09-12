@@ -39,7 +39,7 @@ python GoChessParse.py
 - 输入图
 
 
-![](static/srcImage.jpg)
+![nwxiSs.jpg](https://s2.ax1x.com/2019/09/12/nwxiSs.jpg)
 	
 	
 - 输出矩阵
