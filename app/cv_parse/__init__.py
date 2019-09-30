@@ -18,4 +18,11 @@ def output_result(image_Path,show_result):
         cv2.imshow('show_image', show_image)
         cv2.waitKey()
     output_matrix = parser.output(image, center_lists)
+    # output_list=[]
+    # for na in output_matrix:
+    #     temp=[]
+    #     for i in na:
+    #         temp.append(i)
+    #     output_list.append(temp)
+    # output_matrix=output_list
     return output_matrix
