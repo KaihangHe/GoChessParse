@@ -25,7 +25,7 @@ def run():
     run flask web server
     '''
     app = create_app()
-    app.run(host='0.0.0.0',debug=False)
+    app.run(host='0.0.0.0',debug=True)
 
 
 @click.command()
